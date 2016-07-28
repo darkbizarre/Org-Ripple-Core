@@ -212,7 +212,6 @@ a[ui-sref] {
 }
 
 .btn-info,
-.btn-info:hover,
 .btn-info:focus,
 .btn-info:active,
 .btn-info.active {
@@ -220,6 +219,11 @@ a[ui-sref] {
   border-color: $button-info-background;
   color: #fff;
 }
+  
+  .btn-info:hover,
+  .open > .dropdown-toggle.btn-info {
+    background-color: $button-info-background-hover;
+  }
 
 .btn-success,
 .btn-success:hover,
@@ -2311,6 +2315,11 @@ tr.ng-scope.selectedItemLeft {
   font-weight: bold;
   font-size: 18px;
 }
+
+  .patient-list-full-subheader span.subheader {
+    min-width: 300px;
+    display: inline-block;
+  }
 
 .patient-details-tabs {
   text-align: right;

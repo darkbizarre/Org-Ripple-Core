@@ -15,19 +15,26 @@
   ~
   -->
 
-<div  ng-cloak ng-controller="PatientsListFullCtrl" class="patients-list-context">
-  <div class="row">
-
-    <div class="col-md-7 col-sm-7 col-xs-12 patient-list-full-subheader">
-      <i class="glyphicon glyphicon-list glyphicon-list-patients"></i> {{subHeader}}
-    </div>
-
-    <div ng-if="pagingInfo.totalItems != 0">
-      <div class="col-md-5 col-sm-5 col-xs-12 patient-details-tabs">
-        <span ng-class="{'selectedTab': tab == 'patientInfo'}" ng-click="viewPatients()" class="patientInfoTab">Patient Info</span>
-        <span ng-class="{'selectedTab': tab == 'dateTime'}" ng-click="viewDateTime()">Date / Time</span>
-        <span ng-class="{'selectedTab': tab == 'counts'}" ng-click="viewCounts()" class="countsTab">Counts</span>
+<div ng-cloak ng-controller="PatientsListFullCtrl" class="patients-list-context">
+  
+  <div class="container-fluid">
+    <div class="row">
+  
+      <div class="col-md-7 col-sm-5 col-xs-12 patient-list-full-subheader">
+        <span class="subheader pull-left"><i class="glyphicon glyphicon-list glyphicon-list-patients"></i> {{subHeader}}</span>
+        <div class="dropdown pull-right visible-xs">
+          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span>{{tabName}}</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#" ng-click="viewPatients()">Patient Info</a></li>
+            <li><a href="#" ng-click="viewDateTime()">Date / Time</a></li>
+            <li><a href="#" ng-click="viewCounts()">Counts</a></li>
+          </ul>
+        </div>
       </div>
+
 
       <div class="col-md-12 col-sm-12 col-xs-12">
         <table ng-if="tab == 'patientInfo'" class="table table-striped table-bordered table-hover rwd-table">
@@ -86,17 +93,18 @@
           </tbody>
         </table>
 
-        <div class="text-center">
-          <pagination page="pagingInfo.page" total-items="pagingInfo.totalItems" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page="15" max-size="10" rotate="false" boundary-links="false" ng-model="pagingInfo.page"></pagination>
-          <div ng-if="pagingInfo.totalItems != 0">{{pageInfoText}}</div>
+
+        </div>
+          
+      </div>
+    
+      <div ng-show="pagingInfo.totalItems == 0" ng-cloak class="ng-cloak">
+        <div ng-cloak class="col-md-12 col-sm-12 col-xs-12 ng-cloak">
+          <div ng-cloak class="no-results ng-cloak" ng-bind="noResults"></div>
         </div>
       </div>
-    </div>
-
-    <div ng-show="pagingInfo.totalItems == 0" ng-cloak class="ng-cloak">
-      <div ng-cloak class="col-md-12 col-sm-12 col-xs-12 ng-cloak">
-        <div ng-cloak class="no-results ng-cloak" ng-bind="noResults"></div>
-      </div>
+      
+      
     </div>
   </div>
 </div>
