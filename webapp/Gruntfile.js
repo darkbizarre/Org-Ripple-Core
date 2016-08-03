@@ -18,7 +18,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: '../ripple-demonstrator-api/src/main/webapp'
+    dist: '../ripple-packaging/src/main/webapp'
   };
 
   // Define the configuration for all the tasks
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
 // Change this to '0.0.0.0' to access the server from outside.
-        hostname: host,
+        hostname: 'localhost',
         livereload: 35729
       },
       proxies: [
@@ -88,10 +88,8 @@ module.exports = function (grunt) {
           xforward: false
         },
         {
-//if need add second context(custom route)  like context: '/appointment-call'
           context: '/socket.io',
-//before push to client change host to "localhost"
-          host: host,
+          host: 'localhost',
           port: 8070,
           https: false,
           xforward: false,
@@ -433,8 +431,6 @@ module.exports = function (grunt) {
   var tenant = grunt.option('tenant') || 'ripple';
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
-    console.log(host, port, proxy);
-
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
