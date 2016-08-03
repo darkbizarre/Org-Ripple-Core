@@ -408,6 +408,39 @@ angular
     };
   })
 
+  .filter('nearestAppointment', function() {
+    return function(appointments) {
+      if (appointments === undefined || !appointments.length) {
+        return false;
+      }
+      var now = moment();
+      // var oneDay = 1000 * 60 *60 * 24;
+      var nearest = appointments[0].dateOfAppointment;
+      var nearestPast = appointments[0].dateOfAppointment;
+      for (var i = 1, I = appointments.length ; i < I ; i++) {
+        var diff = now.diff(appointments[i].dateOfAppointment);
+        if (diff > 0) {
+          if (diff < now.diff(nearest) || now.diff(nearest) < 0) {
+            nearest = appointments[i].dateOfAppointment;
+          }
+        } else if (diff > now.diff(nearestPast)) {
+          nearestPast = appointments[i].dateOfAppointment;
+        }
+      }
+        moment.locale('en', {
+            calendar : {
+                sameDay: 'h:mma [today]',
+                nextDay: 'h:mma [tomorrow]',
+                nextWeek: 'h:mma dddd',
+                lastDay: 'h:mma [yesterday]',
+                lastWeek: 'h:mma [last] dddd',
+                sameElse: 'h:mma DD/MM/YYYY'
+            }
+        });
+        return moment((now.diff(nearest) > 0) ? nearest : nearestPast).calendar();
+    };
+  })
+
   .constant('keyCodes', {
     esc: 27,
     enter: 13

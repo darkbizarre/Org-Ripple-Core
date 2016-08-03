@@ -34,6 +34,12 @@ angular.module('rippleDemonstrator')
     Appointment.all($stateParams.patientId).then(function (result) {
       $scope.appointments = result.data;
 
+      $scope.appointments.sort(function (a, b) {
+        return (a.dateOfAppointment == b.dateOfAppointment) ?
+          (a.timeOfAppointment > b.timeOfAppointment ? 1 : -1) :
+          (a.dateOfAppointment > b.dateOfAppointment ? 1 : -1);
+      });
+
       for (var i = 0; i < $scope.appointments.length; i++) {
         $scope.appointments[i].dateOfAppointment = moment($scope.appointments[i].dateOfAppointment).format('DD-MMM-YYYY');
         $scope.appointments[i].timeOfAppointment = moment($scope.appointments[i].timeOfAppointment).format('h:mma') + '-' + moment($scope.appointments[i].timeOfAppointment).add(59, 'm').format('h:mma');

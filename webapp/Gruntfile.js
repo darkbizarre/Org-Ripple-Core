@@ -18,7 +18,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: '../ripple-packaging/src/main/webapp'
+    dist: '../ripple-demonstrator-api/src/main/webapp'
   };
 
   // Define the configuration for all the tasks
@@ -28,10 +28,10 @@ module.exports = function (grunt) {
     yeoman: appConfig,
 
     karma: {
-            unit: {
-                configFile: 'test/karma.conf.js'
-            }
-        },
+      unit: {
+        configFile: 'test/karma.conf.js'
+      }
+    },
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
@@ -74,8 +74,8 @@ module.exports = function (grunt) {
     connect: {
       options: {
         port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
+// Change this to '0.0.0.0' to access the server from outside.
+        hostname: host,
         livereload: 35729
       },
       proxies: [
@@ -83,8 +83,19 @@ module.exports = function (grunt) {
           context: '/api',
           host: 'localhost',
           port: 19191,
-          https: false,
+          ws: true,
+          https: true,
           xforward: false
+        },
+        {
+//if need add second context(custom route)  like context: '/appointment-call'
+          context: '/socket.io',
+//before push to client change host to "localhost"
+          host: host,
+          port: 8070,
+          https: false,
+          xforward: false,
+          ws: true
         }
       ],
       livereload: {
@@ -158,7 +169,7 @@ module.exports = function (grunt) {
 
     // Empties folders to start fresh
     clean: {
-      options: { force: true },
+      options: {force: true},
       dist: {
         files: [{
           dot: true,
@@ -189,11 +200,10 @@ module.exports = function (grunt) {
 
     // Automatically inject Bower components into the app
     wiredep: {
-      options: {
-      },
+      options: {},
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        ignorePath: /\.\.\//
       }
     },
 
@@ -233,7 +243,7 @@ module.exports = function (grunt) {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
-        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
+        assetsDirs: ['<%= yeoman.dist %>', '<%= yeoman.dist %>/images']
       }
     },
 
@@ -423,6 +433,8 @@ module.exports = function (grunt) {
   var tenant = grunt.option('tenant') || 'ripple';
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+    console.log(host, port, proxy);
+
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }

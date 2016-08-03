@@ -1,7 +1,6 @@
 {
   "name": "openehrpoc",
   "version": "0.0.0",
-  "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.1",
     "grunt-autoprefixer": "^0.7.3",
@@ -40,12 +39,17 @@
     "karma-script-launcher": "~0.1.0",
     "karma-story-reporter": "~0.2.2",
     "load-grunt-tasks": "^0.4.0",
-    "time-grunt": "^0.3.1"
+    "socket.io": "~1.4.6",
+    "time-grunt": "^0.3.1",
+    "mysql": "2.11.1"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "serve": "./node_modules/.bin/grunt serve",
+    "socket-server": "node ./socket-server/socket.js",
+    "java-server": "cd ../ && mvn clean package -Pwebapp:run"
   }
 }

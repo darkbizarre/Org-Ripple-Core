@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('rippleDemonstrator')
-  .controller('headerController', function ($scope, $rootScope, $window, $state, usSpinnerService, $stateParams, UserService, AdvancedSearch) {
+  .controller('headerController', function ($scope, $rootScope, $window, $state, usSpinnerService, $stateParams, UserService, AdvancedSearch, socket, browserNotification) {
 
     $rootScope.searchExpression = '';
     $scope.searchExpression = $rootScope.searchExpression;
@@ -21,6 +21,37 @@ angular.module('rippleDemonstrator')
       else {
         $rootScope.currentUser = response.data;
         $scope.autoAdvancedSearch = false;
+
+        browserNotification.getNotificationPermission();
+        socket.emit('user:init', {
+          username: $scope.currentUser.username,
+          nhsNumber: $scope.currentUser.nhsNumber,
+          role: $scope.currentUser.role,
+          surname: $scope.currentUser.familyName,
+          name: $scope.currentUser.givenName
+        });
+
+        socket.on('appointment:init', function (data) {
+          console.log('appointment:init', data);
+          socket.data('showJoinAppointment', data.appointmentId);
+        });
+
+        socket.on('notification:message', function (data) {
+          browserNotification.createNotification(data);
+        });
+
+        $(window).off('blur focus').on("blur focus", function (e) {
+          var prevType = $(this).data("isBlur") ? 'blur' : 'focus';
+          if (prevType != e.type && e.type == 'focus') {
+            browserNotification.closeNotifications();
+            socket.emit('window:focused');
+          }
+          $(this).data('isBlur', e.type == 'blur');
+        });
+
+        socket.on('notification:close', function () {
+          browserNotification.closeNotifications();
+        });
 
         // Direct different roles to different pages at login
         switch ($scope.currentUser.role) {
@@ -323,24 +354,4 @@ angular.module('rippleDemonstrator')
       $scope.searchExpression = expression;
       $scope.searchFocused = true;
     });
-    
-    // Mobile Nav (New)
-    $scope.currentNavTab = ''; // search, notifications or user
-    
-    $scope.changeNavTab = function(newTab){
-      
-      // Is tab already expanded?
-      if( $scope.currentNavTab == newTab ){
-        $scope.currentNavTab = '';
-      } else {
-        $scope.currentNavTab = newTab;       
-      }
-    }
-    
-    $scope.activeNavTab = function(thisTab){
-      if( thisTab == $scope.currentNavTab ){
-        return 'active';
-      }
-    }
-    
   });
